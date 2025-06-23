@@ -94,7 +94,7 @@ def DGLAP_kernel(x_ls, v_ls, mu):
 
 
 def DGLAP_evolution(lc_x_ls, lc_da_mu_i, mu_i, mu_f):
-    N_steps = 100
+    N_steps = 30
     dmu = (mu_f - mu_i) / N_steps
     
     x_ls = lc_x_ls
@@ -103,7 +103,7 @@ def DGLAP_evolution(lc_x_ls, lc_da_mu_i, mu_i, mu_f):
     
     
     lc_da_loop = lc_da_mu_i
-    for step in range(N_steps + 1):
+    for step in range(N_steps):
         mu = mu_i + step * dmu
         
         matrix_DGLAP = DGLAP_kernel(x_ls, v_ls, mu)
@@ -117,7 +117,7 @@ def DGLAP_evolution(lc_x_ls, lc_da_mu_i, mu_i, mu_f):
         
         lc_da_loop += g_mu * ( np.log( mu + dmu ) - np.log( mu ) )
     
-    assert abs(mu - mu_f) < 0.001, f"Evolution loop ended at mu={mu}, but target was mu_f={mu_f}"
+    assert abs(mu + dmu - mu_f) < 0.001, f"Evolution loop ended at mu={mu}, but target was mu_f={mu_f}"
     lc_da_mu_f = lc_da_loop
         
     return lc_da_mu_f
